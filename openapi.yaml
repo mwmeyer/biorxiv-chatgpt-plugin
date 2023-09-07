@@ -1,0 +1,142 @@
+openapi: 3.0.1
+info:
+  title: biorxiv Plugin
+  description: A chatGPT plugin for browsing bioRxiv
+  version: 'v1'
+servers:
+  - url: http://localhost:5003
+paths:
+  /search_biorxiv:
+    get:
+      operationId: searchBiorxiv
+      summary: Search biorxiv for papers
+      parameters:
+        - name: query
+          in: query
+          description: Search query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of papers that match the query
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    format: int32
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        authors:
+                          type: array
+                          items:
+                            type: string
+                        pdf:
+                          type: string
+                        link:
+                          type: string
+        '400':
+          description: Bad request. The query parameter is missing or invalid.
+        '500':
+          description: Internal server error
+  /download_pdf:
+    get:
+      operationId: downloadPdf
+      summary: Download a paper in PDF format
+      parameters:
+        - name: pdf
+          in: query
+          description: URL of the PDF to download
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF download was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                    enum:
+                      - success
+        '400':
+          description: Bad request. The PDF parameter is missing or invalid.
+        '500':
+          description: Internal server error
+  /extract_text:
+    get:
+      operationId: extractText
+      summary: Extract the text from a PDF
+      parameters:
+        - name: pdf
+          in: query
+          description: URL of the PDF
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number to extract text from
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Extracted text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  token_count:
+                    type: integer
+                    format: int32
+        '400':
+          description: Bad request. The PDF parameter is missing or invalid.
+        '500':
+          description: Internal server error
+  /ask_corpus:
+    get:
+      operationId: askCorpus
+      summary: Ask a question based on the content of a paper
+      parameters:
+        - name: query
+          in: query
+          description: The question you want to ask over the entire paper text corpus
+          required: true
+          schema:
+            type: string
+        - name: pdf
+          in: query
+          description: The URL of the PDF document you want to search
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The answer to the question based on the content of the provided PDF document
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+        '400':
+          description: Bad request. The query or pdf parameter is missing or invalid.
+        '500':
+          description: Internal server error
