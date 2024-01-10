@@ -4,10 +4,6 @@ This is a ChatGPT plugin designed to facilitate browsing of biorxiv.org from htt
 
 The plugin enables users to search, download, and extract text of paper PDFs.
 
-Some chat examples:
-* https://chat.openai.com/share/e930ed74-2cec-409b-a70e-485a6bf1e47c
-* https://chat.openai.com/share/9e463a9e-0dba-4f15-bef3-5587509a458d
-
 ## Limitations
 Because LLMs have a maximum context length, entire contents of a paper can't be sent directly to ChatGPT all at once.
 
